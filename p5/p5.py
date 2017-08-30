@@ -45,7 +45,7 @@ def start_many_sims(log_file, num_tasks=10):
 
 
 @App('bash', dfk)
-def stats(deps=[], inputs=[], stdout='average.out'):
+def stats(deps=[], inputs=[], stderr='average.err', stdout='average.out'):
     cmd_line = "stats {}".format(" ".join(inputs))
 
 

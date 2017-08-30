@@ -44,6 +44,3 @@ XPC_SERVICE_NAME=0
 _=/usr/bin/printenv
 __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
 __PYVENV_LAUNCHER__=/usr/local/bin/python3
-bastion=benglick@bastion.turingcompute.net
-siteservice=ubuntu@34.203.217.232
-slackbot=ubuntu@ec2-34-211-26-13.us-west-2.compute.amazonaws.com

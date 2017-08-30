@@ -24,7 +24,7 @@ To install Parsl:
 
 Setup the Parsl tutorial:
 
- $ git clone https://github.com/benhg/parsl-swift-tutorial.git parsl_tutorial
+  $ git clone https://github.com/benhg/parsl-swift-tutorial.git parsl_tutorial
  
- $ cd parsl_tutorial
- $ bash setup.sh
+  $ cd parsl_tutorial
+  $ bash setup.sh

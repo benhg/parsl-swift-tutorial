@@ -1,7 +1,7 @@
 
-Called as: ../app/simulate: 
+Called as: /Users/ben/Desktop/ci17/swift_tutorial/app/simulate: 
 
-Start time: Tue Aug 29 17:27:26 CDT 2017
+Start time: Wed Aug 30 17:40:15 CDT 2017
 Running as user: uid=501(ben) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),701(com.apple.sharepoint.group.1),501(access_bpf),702(com.apple.sharepoint.group.2),33(_appstore),100(_lpoperator),204(_developer),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh)
 Running on node: benbox
 Node IP address: /bin/hostname: illegal option -- I
@@ -44,3 +44,6 @@ XPC_SERVICE_NAME=0
 _=/usr/bin/printenv
 __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0
 __PYVENV_LAUNCHER__=/usr/local/bin/python3
+bastion=benglick@bastion.turingcompute.net
+siteservice=ubuntu@34.203.217.232
+slackbot=ubuntu@ec2-34-211-26-13.us-west-2.compute.amazonaws.com

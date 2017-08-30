@@ -21,7 +21,7 @@ def start_many_sims(num_tasks=10):
     outputs = []
     deps = []
     for i in range(0, num_tasks):
-        outputfile = "sim_{}".format(i)
+        outputfile = "output/sim_{}".format(i)
         a = mysim(stdout=outputfile + ".out", stderr=outputfile + ".err")
         outputs.append(outputfile + ".out")
         deps.append(a)
@@ -29,7 +29,7 @@ def start_many_sims(num_tasks=10):
 
 
 @App('bash', dfk)
-def stats(deps=[], inputs=[], stderr='average.err', stdout='average.out'):
+def stats(deps=[], inputs=[], stderr='output/average.err', stdout='output/average.out'):
     cmd_line = "stats {}".format(" ".join(inputs))
 
 

@@ -2,10 +2,11 @@
 
 from parsl import *
 import parsl
-from parsl.execution_provider.midway.slurm import Midway
+#from parsl.execution_provider.midway.slurm import Midway
 
 workers = IPyParallelExecutor(
     engine_json_file='~/.ipython/profile_default/security/ipcontroller-engine.json')
+
 dfk = DataFlowKernel(workers)
 
 
@@ -29,12 +30,12 @@ def setup():
 
 
 @App('bash', dfk)
-def sort(unsorted, stdout="sorted.out", stderr="sorted.err"):
+def sort(unsorted, stdout="output/sorted.out", stderr="output/sorted.err"):
     cmd_line = "sort {}".format(unsorted)
 
 
 if __name__ == '__main__':
     setup()
     unsorted = "unsorted.txt"
-    sorted = "sorted.txt"
+    sorted = "output/sorted.txt"
     sort(unsorted, stdout=sorted)

@@ -41,22 +41,22 @@ def start_many_sims(steps, sim_range, sim_count, log_file, num_tasks=10):
     outputs = []
     deps = []
     for i in range(0, num_tasks):
-        outputfile = "sim_{}".format(i)
-        biasfile = "bias_{}.out".format(i)
+        outputfile = "output/sim_{}".format(i)
+        biasfile = "output/bias_{}.out".format(i)
         a = simulation(steps, sim_range, biasfile, 1000000, sim_count,
-                       'seed.out', stdout=outputfile + ".out", stderr=log_file)
+                       'output/seed.out', stdout=outputfile + ".out", stderr=log_file)
         outputs.append(outputfile + ".out")
         deps.append(a)
     return outputs, deps
 
 
 @App('bash', dfk)
-def stats(deps=[], inputs=[], stderr='average.err', stdout='average.out'):
+def stats(deps=[], inputs=[], stderr='output/average.err', stdout='output/average.out'):
     cmd_line = "stats {}".format(" ".join(inputs))
 
 
 @App('bash', dfk)
-def gen_seed(n_seeds, r, generate_script, stdout='seed.out', stderr='seed.err'):
+def gen_seed(n_seeds, r, generate_script, stdout='output/seed.out', stderr='output/seed.err'):
     cmd_line = "{} -r {} -n {}".format(generate_script, r, n_seeds)
 
 
@@ -70,7 +70,7 @@ def start_many_bias(bias_range, n_values, bias_script, log_file, num_tasks=10):
     outputs = []
     deps = []
     for i in range(0, num_tasks):
-        outputfile = "bias_{}".format(i)
+        outputfile = "output/bias_{}".format(i)
         a = calc_bias(bias_range, n_values, bias_script,
                       stdout=outputfile + ".out", stderr=log_file)
         outputs.append(outputfile + ".out")
@@ -86,13 +86,13 @@ if __name__ == '__main__':
     seed = gen_seed(1, 200000, "simulate")
     deps.append(seed)
 
-    biases = start_many_bias(1000, 20, 'simulate', "bias.err")
+    biases = start_many_bias(1000, 20, 'simulate', "output/bias.err")
     deps.extend(biases.result()[1])
 
     steps = 1
     sim_range = 100
     n_sim = 10
-    all_sims = start_many_sims(steps, sim_range, n_sim, "sims.err")
+    all_sims = start_many_sims(steps, sim_range, n_sim, "output/sims.err")
     deps.extend([all_sims.result()[1][i].result()
                  for i in range(len(all_sims.result()[1]))])
 

@@ -20,4 +20,5 @@ if __name__ == '__main__':
     setup()
     for i in range(0, 10):
         outputfile = "sim_{}".format(i)
-        mysim(stdout=outputfile + ".out", stderr=outputfile + ".err")
+        mysim(stdout="output/" + outputfile + ".out",
+              stderr="output/" + outputfile + ".err")

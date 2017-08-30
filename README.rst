@@ -22,9 +22,12 @@ To install Parsl:
     
     $ python3 setup.py install
 
-Setup the Parsl tutorial:
+Setup the Parsl tutorial::
 
-  $ git clone https://github.com/benhg/parsl-swift-tutorial.git parsl_tutorial
+    $ git clone https://github.com/benhg/parsl-swift-tutorial.git parsl_tutorial
  
-  $ cd parsl_tutorial
-  $ bash setup.sh
+    $ cd parsl_tutorial
+  
+    $ bash setup.sh
+    
+Doing this will add the sample applications ``simulate`` and ``stats`` (mock "science" applications) and some other functionalities to your local $PATH for you to run the tutorial.

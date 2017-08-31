@@ -5,9 +5,10 @@ import parsl
 import sys
 import os
 
-from parsl.execution_provider.midway.slurm import Midway
+#from parsl.execution_provider.midway.slurm import Midway
 
-workers = IPyParallelExecutor()
+#workers = IPyParallelExecutor()
+workers = ThreadPoolExecutor(max_workers=4)
 dfk = DataFlowKernel(workers)
 
 
@@ -34,8 +35,8 @@ def compile_app():
 
 
 @App('bash', dfk)
-def mpi_hello(time, nproc, app, stdout="mpi_hello.out", stderr="mpi_hello.err"):
-    cmd_line = "{} {} {}".format(app, nproc, time)
+def mpi_hello(time, nproc, app, mpilib='mpiexec', stdout="mpi_hello.out", stderr="mpi_hello.err"):
+    cmd_line = "{} -np {} {} {}".format(mpilib, nproc, app, time)
 
 
 @App('python', dfk)
@@ -54,4 +55,4 @@ if __name__ == '__main__':
     compile_app().result()
 
     app = "{}/mpi_hello".format(os.getcwd())
-    print(many_mpi_hello(14000000, 10, app, 10).result())
+    print(many_mpi_hello(1400000, 10, app, 10).result())

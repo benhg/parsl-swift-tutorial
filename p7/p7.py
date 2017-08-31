@@ -5,10 +5,9 @@ import parsl
 import sys
 import os
 
-#from parsl.execution_provider.midway.slurm import Midway
+from parsl.execution_provider.midway.slurm import Midway
 
-#workers = IPyParallelExecutor()
-workers = ThreadPoolExecutor(max_workers=4)
+workers = IPyParallelExecutor()
 dfk = DataFlowKernel(workers)
 
 

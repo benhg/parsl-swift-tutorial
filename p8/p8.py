@@ -5,9 +5,9 @@ import parsl
 import sys
 import os
 
-#from parsl.execution_provider.midway.slurm import Midway
+from parsl.execution_provider.midway.slurm import Midway
 
-workers = ThreadPoolExecutor(max_workers=4)
+workers = IPyParallelExecutor()
 dfk = DataFlowKernel(workers)
 
 
@@ -34,18 +34,26 @@ def compile_app():
 
 
 @App('bash', dfk)
-def mpi_hello(time, nproc, app, mpilib='mpiexec', stdout="mpi_hello.out", stderr="mpi_hello.err"):
-    cmd_line = "{} -np {} {} {}".format(mpilib, nproc, app, time)
+def mpi_pi(nproc, app, intervals, duration, mpilib='mpiexec', stdout="mpi_pi.out", stderr="mpi_pi.err"):
+    cmd_line = "{} -np {} {} {} {}".format(mpilib,
+                                           nproc, app, intervals, duration)
 
 
 @App('python', dfk)
-def many_mpi_hello(time, nproc, app, n_runs):
+def many_mpi_pi(time, nproc, app, intervals, duration, n_runs=10):
     fus = []
+    files = []
     for i in range(n_runs):
-        print(i)
-        fus.append(mpi_hello(time, nproc, app, stdout="output/mpi_hello_{}.out".format(i),
-                             stderr="output/mpi_hello_{}.err".format(i)))
-    return fus
+        outfile = "output/mpi_pi_{}.out".format(i)
+        fus.append(mpi_pi(nproc, app, intervals, duration, stdout=outfile,
+                          stderr="output/mpi_pi_{}.err".format(i)))
+        files.append(outfile)
+    return fus, files
+
+
+@App('bash', dfk)
+def summarize(pi_runs=[], deps=[], stdout="summarize.out", stderr="summarize.err"):
+    cmd_line = 'grep "^pi" {}'.format(" ".join([str(i) for i in pi_runs]))
 
 
 if __name__ == '__main__':
@@ -53,5 +61,8 @@ if __name__ == '__main__':
     # use .result() to make the execution wait until the app has compiled
     compile_app().result()
 
-    app = "{}/mpi_hello".format(os.getcwd())
-    print(many_mpi_hello(14000000, 10, app, 10).result())
+    app = "{}/mpi_pi".format(os.getcwd())
+    deps, files = many_mpi_pi(48, 10, app, 10, 10).result()
+    print(files)
+    summarize(pi_runs=files, deps=[dep.result() for dep in deps],
+              stdout='output/summarize.out', stderr='output/summarize.err')

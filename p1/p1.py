@@ -16,7 +16,7 @@ def setup():
 
 
 @App('bash', dfk)
-def mysim(stdout="output/" + outputfile + ".out", stderr=outputfile + ".err"):
+def mysim(stdout="output/" + outputfile + ".out", stderr="output/" + outputfile + ".err"):
     """Set this example up as a bash app, which will call a command line utility, in this case simulate"""
     cmd_line = "simulate"
 

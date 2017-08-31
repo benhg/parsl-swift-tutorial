@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 
-from parsl import *
-import parsl
 
+from parsl import App, DataFlowKernel, IPyParallelExecutor
 from parsl.execution_provider.midway.slurm import Midway
+from parsl.dataflow.futures import Future
 
 workers = IPyParallelExecutor(
     engine_json_file='~/.ipython/profile_default/security/ipcontroller-engine.json')
 dfk = DataFlowKernel(workers)
 
-"""From now on, the tutorial applications are written to run on Midway, 
-a cluster located at the University of Chicago Research Computing Center. 
-They have also been tested locally on both Mac and Ubuntu Linux. 
-In order to run them locally, either start an IPyParallel cluster controller on your machine 
+"""From now on, the tutorial applications are written to run on Midway,
+a cluster located at the University of Chicago Research Computing Center.
+They have also been tested locally on both Mac and Ubuntu Linux.
+In order to run them locally, either start an
+IPyParallel cluster controller on your machine
 or change the workers to something like this:
 
 workers = ThreadPoolExecutor(max_workers=NUMBER OF CORES)
@@ -22,7 +23,8 @@ This example is the same as p5.py, except with more layers of dependence added.
 """
 
 
-def midway_setup():
+@App('python', dfk)
+def midway_setup()-> Future:
     """Set site-specific options for midway"""
     conf = {"site": "pool1",
             "queue": "bigmem",
@@ -36,15 +38,17 @@ def midway_setup():
 
 
 @App('bash', dfk)
-def setup():
+def setup()-> Future:
     """set PATH"""
     cmd_line = "export PATH=$PWD/../app/:$PATH"
+
 
 # Set this example up as a bash app, which will call a command line argument
 
 
 @App('bash', dfk)
-def simulation(timesteps, sim_range, bias_file, scale, sim_count, seed_file, stdout='sim.out',  stderr='sim.err'):
+def simulation(timesteps: int, sim_range: int, bias_file: str, scale: int, sim_count: int,
+               seed_file: str, stdout: str='sim.out',  stderr: str='sim.err')->Future:
     """Call simulation from cli with input values from seed and bias files"""
     cmd_line = 'simulate -t {} -r {} -B {} -x {} -n {} -S {}'.format(
         timesteps, sim_range, bias_file, scale, sim_count, seed_file)
@@ -52,41 +56,49 @@ def simulation(timesteps, sim_range, bias_file, scale, sim_count, seed_file, std
 
 
 @App('python', dfk)
-def start_many_sims(steps, sim_range, sim_count, log_file, num_tasks=10):
-    """Launch many concurrent simulations with input values from seed and bias files"""
+def start_many_sims(steps: int, sim_range: int, sim_count: int,
+                    log_file: str, num_tasks: int=10)-> Future:
+    """Launch many concurrent simulations with input values
+    from seed and bias files"""
     outputs = []
     deps = []
     for i in range(0, num_tasks):
         outputfile = "output/sim_{}".format(i)
         biasfile = "output/bias_{}.out".format(i)
         a = simulation(steps, sim_range, biasfile, 1000000, sim_count,
-                       'output/seed.out', stdout=outputfile + ".out", stderr=log_file)
+                       'output/seed.out', stdout=outputfile + ".out",
+                       stderr=log_file)
         outputs.append(outputfile + ".out")
         deps.append(a)
     return outputs, deps
 
 
 @App('bash', dfk)
-def stats(deps=[], inputs=[], stderr='output/average.err', stdout='output/average.out'):
+def stats(deps: str=[], inputs: str=[], stderr: str='output/average.err',
+          stdout: str='output/average.out')->Future:
     """Launch stats calculation with all input files passed through `inputs`"""
     cmd_line = "stats {}".format(" ".join(inputs))
 
 
 @App('bash', dfk)
-def gen_seed(n_seeds, r, generate_script, stdout='output/seed.out', stderr='output/seed.err'):
+def gen_seed(n_seeds: int, r: int, generate_script: str,
+             stdout: str='output/seed.out', stderr: str='output/seed.err')->Future:
     """Generate seed file from simulate executable"""
     cmd_line = "{} -r {} -n {}".format(generate_script, r, n_seeds)
 
 
 @App('bash', dfk)
-def calc_bias(bias_range, n_values, bias_script, stdout='bias.out', stderr='bias.err'):
+def calc_bias(bias_range: int, n_values: int, bias_script: str,
+              stdout: str='bias.out', stderr: str='bias.err')->Future:
     """Generate bias file from simulate executable"""
     cmd_line = "{} -r {} -n {}".format(bias_script, bias_range, n_values)
 
 
 @App('python', dfk)
-def start_many_bias(bias_range, n_values, bias_script, log_file, num_tasks=10):
-    """Launch many concurrent bias simulations with input values from seed files"""
+def start_many_bias(bias_range: int, n_values: int, bias_script: str,
+                    log_file: str, num_tasks: int=10)->Future:
+    """Launch many concurrent bias simulations
+    with input values from seed files"""
     outputs = []
     deps = []
     for i in range(0, num_tasks):

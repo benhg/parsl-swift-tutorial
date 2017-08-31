@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
-
-from parsl import *
-import parsl
-import sys
 import os
 
+from parsl import App, DataFlowKernel, IPyParallelExecutor
+from parsl.dataflow.futures import Future
 from parsl.execution_provider.midway.slurm import Midway
 
-"""From now on, the tutorial applications are written to run on Midway, 
-a cluster located at the University of Chicago Research Computing Center. 
-They have also been tested locally on both Mac and Ubuntu Linux. 
-In order to run them locally, either start an IPyParallel cluster controller on your machine 
+"""From now on, the tutorial applications are written to run on Midway,
+a cluster located at the University of Chicago Research Computing Center
+They have also been tested locally on both Mac and Ubuntu Linux.
+In order to run them locally,
+either start an IPyParallel cluster controller on your machine
 or change the workers to something like this:
 
 workers = ThreadPoolExecutor(max_workers=NUMBER OF CORES)
@@ -20,7 +19,8 @@ workers = IPyParallelExecutor()
 dfk = DataFlowKernel(workers)
 
 
-def midway_setup():
+@App('python', dfk)
+def midway_setup()-> Future:
     """Set midway specific site options"""
     conf = {"site": "pool1",
             "queue": "bigmem",
@@ -34,26 +34,29 @@ def midway_setup():
 
 
 @App('bash', dfk)
-def setup():
+def setup()-> Future:
     """Set PATH"""
     cmd_line = "export PATH=$PWD/../app/:$PATH"
 
 
 @App('bash', dfk)
-def compile_app():
+def compile_app()->Future:
     """Compile MPI app with mpi compiler"""
     cmd_line = "mpicc ../mpi/pi.c -o mpi_pi"
 
 
 @App('bash', dfk)
-def mpi_pi(nproc, intervals, duration, app="mpi_pi", mpilib='mpiexec', stdout="mpi_pi.out", stderr="mpi_pi.err"):
+def mpi_pi(nproc: int, intervals: int, duration: int, app: str="mpi_pi",
+           mpilib: str='mpiexec', stdout: str="mpi_pi.out",
+           stderr: str="mpi_pi.err")-> Future:
     """Call mpi_pi from cli"""
     cmd_line = "{} -np {} {} {} {}".format(mpilib,
                                            nproc, app, intervals, duration)
 
 
 @App('python', dfk)
-def many_mpi_pi(time, nproc, app, intervals, duration, n_runs=10):
+def many_mpi_pi(time: int, nproc: int, app: int, intervals: int,
+                duration: int, n_runs: int=10)-> Future:
     """Call many copies of mpi_pi concurrently"""
     fus = []
     files = []
@@ -66,7 +69,8 @@ def many_mpi_pi(time, nproc, app, intervals, duration, n_runs=10):
 
 
 @App('bash', dfk)
-def summarize(pi_runs=[], deps=[], stdout="summarize.out", stderr="summarize.err"):
+def summarize(pi_runs: list=[], deps: list=[], stdout: str="summarize.out",
+              stderr: str="summarize.err")-> Future:
     """Create summary file"""
     cmd_line = 'grep "^pi" {}'.format(" ".join([str(i) for i in pi_runs]))
 

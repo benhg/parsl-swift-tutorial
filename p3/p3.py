@@ -1,23 +1,24 @@
-from parsl import *
+from parsl import App, DataFlowKernel, ThreadPoolExecutor
+from parsl.dataflow.futures import Future
 
 workers = ThreadPoolExecutor(max_workers=4)
 dfk = DataFlowKernel(workers)
 
 
 @App('bash', dfk)
-def setup():
+def setup()-> Future:
     """set PATH"""
     cmd_line = "export PATH=$PWD/../app/:$PATH"
 
 
 @App('bash', dfk)
-def mysim(stdout="sim.out", stderr="sim.err"):
+def mysim(stdout: str="sim.out", stder: str="sim.err")-> Future:
     """Call simulate on the command line"""
     cmd_line = "simulate"
 
 
 @App('python', dfk)
-def start_many_sims(num_tasks=10):
+def start_many_sims(num_tasks: int=10)-> Future:
     """Start many concurrent simulations on the command line"""
     outputs = []
     deps = []
@@ -30,7 +31,9 @@ def start_many_sims(num_tasks=10):
 
 
 @App('bash', dfk)
-def stats(deps=[], inputs=[], stderr='output/average.err', stdout='output/average.out'):
+def stats(deps: list=[], inputs: list=[],
+          stderr: str='output/average.err',
+          stdout: str='output/average.out')-> Future:
     """call stats cli utility with all simulations ans inputs"""
     cmd_line = "stats {}".format(" ".join(inputs))
 

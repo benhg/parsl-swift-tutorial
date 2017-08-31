@@ -7,11 +7,21 @@ import os
 
 from parsl.execution_provider.midway.slurm import Midway
 
+"""From now on, the tutorial applications are written to run on Midway, 
+a cluster located at the University of Chicago Research Computing Center. 
+They have also been tested locally on both Mac and Ubuntu Linux. 
+In order to run them locally, either start an IPyParallel cluster controller on your machine 
+or change the workers to something like this:
+
+workers = ThreadPoolExecutor(max_workers=NUMBER OF CORES)
+"""
+
 workers = IPyParallelExecutor()
 dfk = DataFlowKernel(workers)
 
 
 def midway_setup():
+    """Set midway specific site options"""
     conf = {"site": "pool1",
             "queue": "bigmem",
             "maxnodes": 4,
@@ -25,22 +35,26 @@ def midway_setup():
 
 @App('bash', dfk)
 def setup():
+    """Set PATH"""
     cmd_line = "export PATH=$PWD/../app/:$PATH"
 
 
 @App('bash', dfk)
 def compile_app():
+    """Compile MPI app with mpi compiler"""
     cmd_line = "mpicc ../mpi/pi.c -o mpi_pi"
 
 
 @App('bash', dfk)
-def mpi_pi(nproc, app, intervals, duration, mpilib='mpiexec', stdout="mpi_pi.out", stderr="mpi_pi.err"):
+def mpi_pi(nproc, intervals, duration, app="mpi_pi", mpilib='mpiexec', stdout="mpi_pi.out", stderr="mpi_pi.err"):
+    """Call mpi_pi from cli"""
     cmd_line = "{} -np {} {} {} {}".format(mpilib,
                                            nproc, app, intervals, duration)
 
 
 @App('python', dfk)
 def many_mpi_pi(time, nproc, app, intervals, duration, n_runs=10):
+    """Call many copies of mpi_pi concurrently"""
     fus = []
     files = []
     for i in range(n_runs):
@@ -53,6 +67,7 @@ def many_mpi_pi(time, nproc, app, intervals, duration, n_runs=10):
 
 @App('bash', dfk)
 def summarize(pi_runs=[], deps=[], stdout="summarize.out", stderr="summarize.err"):
+    """Create summary file"""
     cmd_line = 'grep "^pi" {}'.format(" ".join([str(i) for i in pi_runs]))
 
 
@@ -60,6 +75,13 @@ if __name__ == '__main__':
     setup()
     # use .result() to make the execution wait until the app has compiled
     compile_app().result()
+
+    """
+    get futures that stats depends on.
+    Because we call with bash apps, we need to get the dependent futures separately
+    if we were to rewrite with all python apps returning filenames, we could simply pass
+    the futures themselves into the next layer of apps and execution would wait automatically
+    """
 
     app = "{}/mpi_pi".format(os.getcwd())
     deps, files = many_mpi_pi(48, 10, app, 10, 10).result()

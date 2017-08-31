@@ -1,7 +1,7 @@
 
 Called as: /Users/ben/Desktop/ci17/swift_tutorial/p2/../app/simulate: 
 
-Start time: Thu Aug 31 15:22:53 CDT 2017
+Start time: Thu Aug 31 15:24:02 CDT 2017
 Running as user: uid=501(ben) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),701(com.apple.sharepoint.group.1),501(access_bpf),702(com.apple.sharepoint.group.2),33(_appstore),100(_lpoperator),204(_developer),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh)
 Running on node: benbox
 Node IP address: /bin/hostname: illegal option -- I
@@ -29,7 +29,7 @@ LANG=en_US.UTF-8
 LOGNAME=ben
 MANPATH=/opt/local/share/man:
 PATH=/Users/ben/Desktop/ci17/swift_tutorial/p2/../app/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/tcl-tk/bin:/opt/metasploit-framework/bin:/Library/TeX/texbin:/Applications/Wireshark.app/Contents/MacOS:/Applications/pentesting/john:/Applications/pentesting/hashcat:/usr/local/sbin
-PWD=/Users/ben/Desktop/ci17/swift_tutorial/p2
+PWD=/Users/ben/Desktop/ci17/swift_tutorial/p1
 SHELL=/bin/bash
 SHLVL=3
 SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.xPcGLKTCnx/Listeners

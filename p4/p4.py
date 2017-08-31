@@ -2,15 +2,24 @@
 
 from parsl import *
 import parsl
-#from parsl.execution_provider.midway.slurm import Midway
+from parsl.execution_provider.midway.slurm import Midway
 
+"""From now on, the tutorial applications are written to run on Midway, 
+a cluster located at the University of Chicago Research Computing Center. 
+They have also been tested locally on both Mac and Ubuntu Linux. 
+In order to run them locally, either start an IPyParallel cluster controller on your machine 
+or change the workers to something like this:
+
+workers = ThreadPoolExecutor(max_workers=NUMBER OF CORES)"""
+
+# This is the default file location. I've left it in on the first example for clarity.
 workers = IPyParallelExecutor(
     engine_json_file='~/.ipython/profile_default/security/ipcontroller-engine.json')
-
 dfk = DataFlowKernel(workers)
 
 
 def midway_setup():
+    """Set site-specific options"""
     conf = {"site": "pool1",
             "queue": "bigmem",
             "maxnodes": 4,
@@ -24,6 +33,7 @@ def midway_setup():
 
 @App('bash', dfk)
 def setup():
+    """Set Path"""
     cmd_line = "export PATH=$PWD/../app/:$PATH"
 
 # Set this example up as a bash app, which will call a command line argument
@@ -31,6 +41,7 @@ def setup():
 
 @App('bash', dfk)
 def sort(unsorted, stdout="output/sorted.out", stderr="output/sorted.err"):
+    """Call sort executable on file `unsorted`"""
     cmd_line = "sort {}".format(unsorted)
 
 

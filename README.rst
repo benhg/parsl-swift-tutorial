@@ -5,6 +5,8 @@ Parsl allows you to define a dependency based graph of what various applications
 While you can write arbitrary programs directly in Pars, one of the things Parsl is good at is acting like a structured "shell" language. 
 It runs programs concurrently as soon as their inputs are available, reducing the need for complex parallel programming. Parsl expresses workflow in a portable fashion: The same script can run on multicore computers, clusters, clouds, grids, and supercomputers.
 
+In every example, you will find a parsl script that executes the workflow pattern as well as the equivalent swift code that the parsl was created from. In most cases, there is also a visual representation of the workflow.
+
 In this tutorial, you will be able to first try a few Parsl examples (examples 1-3) on your local machine, to get a sense of the language. Then, in examples 4-6 you will run similar workflows on any resource you may have access to, such as clouds (Amazon Web Services), Cray HPC systems, clusters etc, and see how more complex workflows can be expressed with Parsl scripts.
 
 Examples 4-6 can also be run on a local multicore machine if desired.

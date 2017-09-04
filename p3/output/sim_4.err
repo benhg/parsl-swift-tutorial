@@ -1,7 +1,7 @@
 
 Called as: /Users/ben/Desktop/ci17/swift_tutorial/app/simulate: 
 
-Start time: Wed Aug 30 17:40:16 CDT 2017
+Start time: Mon Sep  4 16:03:57 PDT 2017
 Running as user: uid=501(ben) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),701(com.apple.sharepoint.group.1),501(access_bpf),702(com.apple.sharepoint.group.2),33(_appstore),100(_lpoperator),204(_developer),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh)
 Running on node: benbox
 Node IP address: /bin/hostname: illegal option -- I
@@ -28,7 +28,7 @@ HOME=/Users/ben
 LANG=en_US.UTF-8
 LOGNAME=ben
 MANPATH=/opt/local/share/man:
-PATH=/Users/ben/Desktop/ci17/swift_tutorial/app/:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/tcl-tk/bin:/opt/metasploit-framework/bin:/Library/TeX/texbin:/Applications/Wireshark.app/Contents/MacOS:/Applications/pentesting/john:/Applications/pentesting/hashcat:/usr/local/sbin
+PATH=/Users/ben/Desktop/ci17/swift_tutorial/app:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/tcl-tk/bin:/opt/metasploit-framework/bin:/Library/TeX/texbin:/Applications/Wireshark.app/Contents/MacOS:/Applications/pentesting/john:/Applications/pentesting/hashcat:/usr/local/sbin
 PWD=/Users/ben/Desktop/ci17/swift_tutorial/p3
 SHELL=/bin/bash
 SHLVL=3
@@ -36,7 +36,7 @@ SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.xPcGLKTCnx/Listeners
 TERM=xterm-256color
 TERM_PROGRAM=Apple_Terminal
 TERM_PROGRAM_VERSION=388.1
-TERM_SESSION_ID=226B07F1-7DB9-4961-8023-0FBC8D3C8984
+TERM_SESSION_ID=81983246-E875-40E4-B50D-9E04E6794C57
 TMPDIR=/var/folders/qz/41nw0z1j1xl9mhb0cpfpgz_w0000gn/T/
 USER=ben
 XPC_FLAGS=0x0

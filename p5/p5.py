@@ -44,44 +44,36 @@ def setup()-> Future:
 
 
 @App('bash', dfk)
-def mysim(stdout: str="sim.out", stderr: str="sim.err")-> Future
+def mysim(stdout: str="sim.out", stderr: str="sim.err")->Future:
     """Call simulate from the cli"""
     cmd_line = "simulate"
 
 
 @App('python', dfk)
-def start_many_sims(log_file: str, num_tasks: int=10)-> Future:
-    """Start many concurrent simulations from parsl itself"""
+def start_many_sims(num_tasks: int=10)-> Future:
+    """Start many concurrent simulations on the command line"""
     outputs = []
-    deps = []
     for i in range(0, num_tasks):
         outputfile = "output/sim_{}".format(i)
-        a = mysim(stdout=outputfile + ".out", stderr=log_file)
-        outputs.append(outputfile + ".out")
-        deps.append(a)
-    return outputs, deps
+        a = mysim(stdout=outputfile + ".out", stderr=outputfile +
+                  ".err", outputs=[outputfile + ".out"])
+        outputs.append(a)
+    return outputs
 
 
 @App('bash', dfk)
-def stats(deps: list=[], inputs: list=[], stderr: str='output/average.err',
+def stats(inputs: list=[],
+          stderr: str='output/average.err',
           stdout: str='output/average.out')-> Future:
-    """Call stats with filnames passed in through `inputs`"""
+    """call stats cli utility with all simulations ans inputs"""
     cmd_line = "stats {}".format(" ".join(inputs))
 
 
 if __name__ == '__main__':
-    setup()
-    results = start_many_sims('output/sims.log', 100)
-    # get all filenames
-    inputs = results.result()[0]
-    """
-    get futures that stats depends on.
-    Because we call with bash apps, we need
-    to get the dependent futures separately
-    if we were to rewrite with all python apps
-    returning filenames, we could simply pass
-    the futures themselves into the next layer
-    of apps and execution would wait automatically"""
-
-    deps = [dep.result() for dep in results.result()[1]]
-    stats(deps=deps, inputs=inputs)
+    # Make execution wait until after path is set
+    setup().result()
+    results = [i[1][0].result() for i in start_many_sims().result()]
+    # Get filenames of simulation outputs
+    # Get futures that the stats function will depend on.
+    # pass dependencies into
+    out = stats(inputs=results)

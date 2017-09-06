@@ -57,7 +57,7 @@ def simulation(timesteps: int, sim_range: int, bias_file: str, scale: int, sim_c
 
 @App('python', dfk)
 def start_many_sims(steps: int, sim_range: int, sim_count: int,
-                    log_file: str, num_tasks: int=10)-> Future:
+                    log_file: str, num_tasks: int=10, inputs=[])-> Future:
     """Launch many concurrent simulations with input values
     from seed and bias files"""
     outputs = []
@@ -82,7 +82,7 @@ def stats(deps: str=[], inputs: str=[], stderr: str='output/average.err',
 
 @App('bash', dfk)
 def gen_seed(n_seeds: int, r: int, generate_script: str,
-             stdout: str='output/seed.out', stderr: str='output/seed.err')->Future:
+             stdout: str='output/seed.out', stderr: str='output/seed.err', outputs=[])->Future:
     """Generate seed file from simulate executable"""
     cmd_line = "{} -r {} -n {}".format(generate_script, r, n_seeds)
 
@@ -116,21 +116,18 @@ if __name__ == '__main__':
 
     # Generate seed file
     seedfile = 'seed.out'
-    seed = gen_seed(1, 200000, "simulate")
-    deps.append(seed)
+    seed = gen_seed(1, 200000, "simulate", outputs=[
+                    'output/seed.out'])[1]
 
     # Generate a bias file for each simulation
     biases = start_many_bias(1000, 20, 'simulate', "output/bias.err")
-    deps.extend(biases.result()[1])
 
     steps = 1
     sim_range = 100
     n_sim = 10
     # run simulations only after seed and bias files are ready
-    all_sims = start_many_sims(steps, sim_range, n_sim, "output/sims.err")
-    deps.extend([all_sims.result()[1][i].result()
-                 for i in range(len(all_sims.result()[1]))])
-
+    all_sims = start_many_sims(
+        steps, sim_range, n_sim, "output/sims.err", inputs=[biases])
     # run stats only after all sims are complete
     averages = all_sims.result()[0]
-    stats(deps=deps, inputs=averages)
+    stats(inputs=averages)

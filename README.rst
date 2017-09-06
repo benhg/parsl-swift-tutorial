@@ -33,3 +33,5 @@ Setup the Parsl tutorial::
     $ bash setup.sh
     
 Doing this will add the sample applications ``simulate`` and ``stats`` (mock "science" applications) and some other functionalities to your local $PATH for you to run the tutorial.
+
+See the link https://nbviewer.jupyter.org/github/benhg/parsl-swift-tutorial/blob/master/entire-parsl-tutorial.ipynb for a static view of the enire tutorial in a Jupyter Notebook.

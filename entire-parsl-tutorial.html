@@ -11818,7 +11818,7 @@ $ bash setup.sh
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Example-1:-Run-a-single-application-under-Parsl">Example 1: Run a single application under Parsl<a class="anchor-link" href="#Example-1:-Run-a-single-application-under-Parsl">&#182;</a></h2><p><strong>The first swift script, p1.py, runs simulate.sh to generate a single random number. It writes the number to a file.</strong>
-<img src="attachment:part01.png" alt="part01.png"></p>
+<img src="p1/pattern.png" alt="part01.png"></p>
 
 </div>
 </div>
@@ -11870,7 +11870,7 @@ $ bash setup.sh
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Example-2:--Running-an-ensemble-of-many-apps-in-parallel-with-a-&quot;foreach&quot;-loop">Example 2:  Running an ensemble of many apps in parallel with a "foreach" loop<a class="anchor-link" href="#Example-2:--Running-an-ensemble-of-many-apps-in-parallel-with-a-&quot;foreach&quot;-loop">&#182;</a></h2><p><strong>The p2.py script introduces the foreach parallel iteration construct to run many concurrent simulations.</strong>
-<img src="attachment:part02.png" alt="part02.png"></p>
+<img src="p2/pattern.png" alt="part02.png"></p>
 
 </div>
 </div>
@@ -11927,7 +11927,7 @@ $ bash setup.sh
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Example-3:-Analyzing-results-of-a-parallel-ensemble">Example 3: Analyzing results of a parallel ensemble<a class="anchor-link" href="#Example-3:-Analyzing-results-of-a-parallel-ensemble">&#182;</a></h2><p><strong>After all the parallel simulations in an ensemble run have completed, it is typically necessary to gather and analyze their results with some kind of post-processing analysis program or script. p3.py introduces such a postprocessing step. In this case, the files created by all of the parallel runs of simulation.sh will be averaged by the trivial "analysis application" stats.sh:</strong></p>
-<p><img src="attachment:part03.png" alt="part03.png"></p>
+<p><img src="p3/pattern.png" alt="part03.png"></p>
 
 </div>
 </div>
@@ -12081,8 +12081,8 @@ $ bash setup.sh
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Example-5:-Running-a-parallel-ensemble-on-compute-resources">Example 5: Running a parallel ensemble on compute resources<a class="anchor-link" href="#Example-5:-Running-a-parallel-ensemble-on-compute-resources">&#182;</a></h2><p>p5.py will run our mock "simulation" applications on compute nodes. The script is similar to p3.py, but specifies that each simulation app invocation should additionally return the log file which the application writes to stderr. In p3.py the apps simulation and stats called the binaries stats and simulate which are available on the local machine and is present in the system path.</p>
-<p><img src="attachment:part03.png" alt="part03.png"></p>
+<h2 id="Example-5:-Running-a-parallel-ensemble-on-compute-resources">Example 5: Running a parallel ensemble on compute resources<a class="anchor-link" href="#Example-5:-Running-a-parallel-ensemble-on-compute-resources">&#182;</a></h2><p>p5.py will run our mock "simulation" applications on compute nodes. The script is similar to p3.py, but specifies that each simulation app invocation should additionally return the log file which the application writes to stderr. In p5.py the apps simulation and stats called the binaries stats and simulate which are available on the local machine and is present in the system path.</p>
+<p><img src="p3/pattern.png" alt="part03.png"></p>
 
 </div>
 </div>
@@ -12180,7 +12180,7 @@ $ bash setup.sh
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Example-6:-Specifying-more-complex-workflow-patterns">Example 6: Specifying more complex workflow patterns<a class="anchor-link" href="#Example-6:-Specifying-more-complex-workflow-patterns">&#182;</a></h2><p>p6.py expands the workflow pattern of p5.py to add additional stages to the workflow. Here, we generate a dynamic seed value that will be used by all of the simulations, and for each simulation, we run a pre-processing application to generate a unique "bias file". This pattern is shown below, followed by the parsl script.
-<img src="attachment:part06.png" alt="part06.png"></p>
+    <img src="p6/pattern.png" alt="part06.png"></p>
 
 </div>
 </div>
@@ -12193,7 +12193,7 @@ $ bash setup.sh
 <div class=" highlight hl-ipython3"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
 
 
-<span class="kn">from</span> <span class="nn">parsl</span> <span class="k">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">DataFlowKernel</span><span class="p">,</span> <span class="n">IPyParallelExecutor</span>
+    <span class="kn">from</span> <span class="nn">parsl</span> <span class="k">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">DataFlowKernel</span><span class="p">,</span> <span class="n">IPyParallelExecutor</span>
 <span class="kn">from</span> <span class="nn">parsl.execution_provider.midway.slurm</span> <span class="k">import</span> <span class="n">Midway</span>
 <span class="kn">from</span> <span class="nn">parsl.dataflow.futures</span> <span class="k">import</span> <span class="n">Future</span>
 
